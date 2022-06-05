@@ -2,26 +2,19 @@
 {% block content %}
 <div class="container shadow-lg p-3 mb-5 bg-white rounded">
     <div class="text-center">
-        <h1>Ajouter Utilisateur</h1>
+        <h1>Création Utilisateur</h1><hr>
     </div>
     <form method="POST">{% csrf_token %}
         <div class="form-row">
-      <div class="col-md-6 mb-3">
+      <div class="col-md-4 mb-3">
         {{ form.username.label }}
         {{form.username}}
       </div>
-      <div class="col-md-6 mb-3">
-        {{ form.email.label }}
-        {{form.email}}
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="col-md-6 mb-3">
+      <div class="col-md-4 mb-3">
         {{ form.first_name.label }}
         {{form.first_name}}
       </div>
-      <div class="col-md-6 mb-3">
+      <div class="col-md-4 mb-3">
         {{ form.last_name.label }}
         {{form.last_name}}
       </div>

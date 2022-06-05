@@ -95,120 +95,83 @@
       <div class="logo_placement">
         <img alt="logo" src="{{company.logo.path}}" />
       </div>
-        <hr>
-        <h1 style="text-align: center; font-size: 30px; margin-top : 25px; margin-bottom : 0px;">Gestion Des Stocks</h1>
-        <hr>
-      </div>
+    </div>
       <div class="card">
       <div>
       <h2>
-      <h1 style="text-align: center; font-size: 30px; margin-top : 25px; margin-bottom : 0px;">Récapitulatif</br>({{start_date|date:'d/M/Y'}} - {{end_date|date:'d/M/Y'}})</h1>
+      <h1 style="text-align: center; font-size: 30px; margin-top : 25px; margin-bottom : 0px;">Récapitulatif</br>({{start_date}} - {{end_date}})</h1>
       </h2>
-        <h1 style="margin-bottom : 5px;">Opérateur &nbsp;:&nbsp;{{ user.first_name|upper }} {{ user.last_name|upper }}</h1>
       </div>
       <hr>
+        <h3 style="text-align: center; font-size: 30px; margin-top : 25px; margin-bottom : 0px;">Achats</h3>
+        {% for oi in orders_in %}
+        <h4 style="text-align: left; font-size: 20px; margin-top : 10px; margin-bottom : 0px;">{{oi.ref_code}}</h4>
+        <table class="table order-content">
+          <thead>
+            <tr>
+              <th style="width: 45%;">Produits</th>
+              <th style="width: 20%;">Quantités</th>
+              <th style="width: 20%;">Prix</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in oi.items.all %}
+            <tr class="order-item">
+              <td>{{ item.item.product_designation }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.price|floatformat:2 }} D.A</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endfor %}
 
-              <h3 style="text-align: center; font-size: 30px; margin-top : 25px; margin-bottom : 0px;">Échanges</h3>
+        <h3 style="text-align: center; font-size: 30px; margin-top : 25px; margin-bottom : 0px;">Ventes</h3>
+        {% for oo in orders_in %}
+        <h4 style="text-align: left; font-size: 20px; margin-top : 10px; margin-bottom : 0px;">{{oo.ref_code}}</h4>        
+        <table class="table order-content">
+          <thead>
+            <tr>
+              <th style="width: 45%;">Produits</th>
+              <th style="width: 20%;">Quantités</th>
+              <th style="width: 20%;">Prix</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in oo.items.all %}
+            <tr class="order-item">
+              <td>{{ item.item.product_designation }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.price|floatformat:2 }} D.A</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endfor %}
+
+        <h3 style="text-align: center; font-size: 30px; margin-top : 25px; margin-bottom : 0px;">Récap Produits</h3>
         <table class="table order-content">
           <thead>
             <tr>
               <th style="width: 60%;">Produit</th>
-              <th style="width: 20%;">Envoi</th>
-              <th style="width: 20%;">Réception</th>
+              <th style="width: 20%;">Achats</th>
+              <th style="width: 20%;">Ventes</th>
             </tr>
           </thead>
           <tbody>
+            {% for p in products %}
             <tr class="order-item">
-              <td> Bobines</td>
-              <td> - </td>
-              <td> {{coils_number}} ({{coils_weight}} KG)</td>
-            </tr>
-            <tr class="order-item">
-              <td> Déchet Haute Densité</td>
-              <td> {{high_trash_out_total|floatformat:1}}</td>
-              <td> {{high_trash_in_total}} ({{ high_trash_in_total_weight|floatformat:1 }} KG)</td>
-            </tr>
-            <tr class="order-item">
-              <td> Déchet Basse Densité</td>
-              <td> {{low_trash_out_total|floatformat:1}}</td>
-              <td> {{low_trash_in_total}} ({{ low_trash_in_total_weight|floatformat:1 }} KG)</td>
-            </tr>
-            {% for raw in raw %}
-            {% if raw.name.name != "polyéthylène recyclé" %}
-            {% if raw.calculated_our_quantity_brought != 0 or raw.calculated_our_quantity_taken != 0 %}
-            <tr class="order-item">
-              <td> {{ raw.product_designation }}</td>
-              <td> {{ raw.calculated_our_quantity_taken }}</td>
-              <td> {{ raw.calculated_our_quantity_brought }}</td>
-            </tr>
-            {% endif %}
-            {% endif %}
-            {% endfor %}
-          </tbody>
-        </table>
-        
-      <h3 style="text-align: center; font-size: 30px; margin-top : 25px; margin-bottom : 0px;">Produit Fini</h3>
-        {% for product_order in product_orders %}
-        <table class="table order-content">
-          <thead>
-            <tr>
-              <th style="width: 80%;">Produit</th>
-              <th style="width: 20%;">Quantité</th>
-            </tr>
-          </thead>
-          <tbody>
-          {% for item in product_order.items.all %}
-            <tr class="order-item">
-              <td> {{ item.item.product_designation }}</td>
-              <td> {{ item.quantity }}</td>
+              <td>{{p.product_designation}}</td>
+              <td>{{p.calculated_bought_quantity}}/{{p.calculated_cost|floatformat:2}} D.A</td>
+              <td>{{p.calculated_sold_quantity}}/{{p.calculated_benefit|floatformat:2}} D.A</td>
             </tr>
             {% endfor %}
-            <h1 style="text-align: center;">
-          <strong>Bon N° {{ product_order.ref_code }} ({% if product_order.external_stock is True %} Stock Externe {% elif product_order.external_stock is False %} Stock Interne {%endif%})</strong>
-          </h1>
-          </tbody>
-          <h2 style="text-align: left;">
-          <strong>Client </strong>: {{ product_order.client.first_name }} {{ product_order.client.last_name }}<br>
-          <strong>Nombre de Colis </strong>: {{ product_order.get_total }}
-        </h2>
-        </table>
-        {% endfor %}
-        
-        <h3 style="text-align: center; font-size: 30px; margin-top : 25px; margin-bottom : 0px;">Matière Première</h3>
-        {% for matter_order in matter_orders %}
-        <table class="table order-content">
-          <thead>
-            <tr>
-              <th style="width: 80%;">Matière Première</th>
-              <th style="width: 20%;">Quantité</th>
-            </tr>
-          </thead>
-          <tbody>
-          {% for item in matter_order.items.all %}
             <tr class="order-item">
-              <td> {{ item.item.product_designation }}</td>
-              <td> {{ item.quantity }}</td>
+              <td> <p style="font-weight: bold;">Total Achats : {{cost|floatformat:2}} D.A</p></td>
+              <td> <p style="font-weight: bold;">Total Ventes : {{benefit|floatformat:2}} D.A</p></td>
             </tr>
-            {% endfor %}
-            <h1 style="text-align: center;">
-          <strong>Bon N° {{ matter_order.ref_code }} {% if matter_order.type_consumption == "STOCK_OUT" %} ({{ matter_order.get_type_consumption_display }}) {% elif matter_order.type_order == "STOCK_ENTRY" or matter_order.type_order == "STOCK_RETURN" %}({{matter_order.get_type_order_display}}) {% endif %}</strong>
-          </h1>
           </tbody>
-          <h2 style="text-align: left;">
-          <strong>{% if matter_order.type_order == "STOCK_OUT" %} Pour </strong>: {% if matter_order.type_consumption == "EXTERNAL" %} {{ matter_order.company }} {% elif matter_order.type_consumption == "INTERNAL" %} {{ matter_order.intern_user.first_name }} {{ matter_order.intern_user.last_name }} {% endif %} {% elif matter_order.type_order == "STOCK_ENTRY" %} De : {{ matter_order.supplier.first_name }} {{ matter_order.supplier.last_name }} {% endif %}<br>
-        </h2>
-        </table>
-        {% endfor %}
-
-      </div>
-      <table class="signature">
-        <thead>
-          <tr>
-            <th style="text-align: right; text-decoration:underline;">Signature</th>
-          </tr>
-        </thead>
         </table>
       </div>
-    </div>
   </body>
 </html>

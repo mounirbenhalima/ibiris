@@ -3,7 +3,7 @@
 <div class="container shadow-lg p-3 mb-5 bg-white rounded">
 
   <div class='text-center mt-3'>
-    <h3>Liste des Utilisateur</h3>
+    <h3>Utilisateurs</h3>
   </div>
 
   <!-- <div class="row mb-3">
@@ -26,9 +26,9 @@
   <div class="row justify-content-end">
     <div class="col-sm-12 col-md-4">
       <form class="form-inline md-form mb-4">
-        <input class="form-control" type="text" placeholder="Search" aria-label="Search" name='q'
+        <input class="form-control" type="text" placeholder="Rechercher" aria-label="Search" name='q'
         value='{{ request.GET.q }}'>
-      <button class="btn btn-outline-dark btn-rounded btn-sm my-0" type="submit">Search</button>
+      <button class="btn btn-outline-dark btn-rounded btn-sm my-0" type="submit">Recherche</button>
       </form>
       <a class="btn btn-outline-dark mb-3 btn-rounded btn-lg my-0"  href="{% url 'register' %}">Ajouter</a>
     </div>
@@ -41,7 +41,6 @@
         <tr>
           <th style="width:25%;">Nom</th>
           <th style="width:10%;">Pseudo</th>
-          <th style="width:10%;">Groupe</th>
           <th style="width:25%;">Poste</th>
           <th style="width:30%;">Téléphone</th>
         </tr>
@@ -53,7 +52,6 @@
         
           <th>{{ profile.user.first_name|upper }} {{ profile.user.last_name|upper }}</th>
           <td>{{ profile.user.username }}</td>
-          <td>{{ profile.group|upper }}</td>
           <td>{{ profile.job_position.name }}</td>
           {% if request.user.username != "admin" %}<td>{{ profile.mobile }}</td>
           {% else %}

@@ -98,39 +98,34 @@
       <div class="user-info">
       <div class="">
         <p><strong>Téléphone </strong> : +213 0 00 00 00 00</p>
-        <p><strong>Adresse</strong> : <br>Zone Industrielle 2, Section 1, Ilot 73,<br>Es Senia, Oran, Algérie.</p>
-        <p><strong>E-Mail</strong> : info@tayplast-dz.com</p>
+        <p><strong>Adresse</strong> : <br></p>
+        <p><strong>E-Mail</strong> : info@info-dz.com</p>
       </div>
         <hr>
 
-        <h1 style="text-align: center; font-size: 30px; margin-top : 35px; margin-bottom : 10px;">
-            {% if order_list.type_order == "STOCK_ENTRY" %}
-              Bon d'Entrée
-            {% elif order_list.type_order == "STOCK_OUT" %}
-              Bon de Sortie
-            {% elif order_list.type_order == "STOCK_RETURN" %}
+        <h1 style="text-align: center; font-size: 30px; margin-top : 35px;">
+            {% if order.type_order == "STOCK_ENTRY" %}
+              Bon d'Achat
+            {% elif order.type_order == "STOCK_OUT" %}
+              Bon de Vente
+            {% elif order.type_order == "STOCK_RETURN" %}
               Bon de Retour
             {% endif %}
           </h1>
-          <h2 style="text-align: center; font-size: 20px; margin-bottom:5px;">
-          ({{ order_list.category}})
-          <h2>
 
       </div>
       <div class="card">
-        <table class="table1">
-          <td>
-            <div class="user-info" >
-              <img src="{% static 'default/tay_plast/images/logo.png' %}" width="150" height="40"
-                class="d-inline-block align-top mr-4" alt="" loading="lazy">
-            </div>
-          </td>
-        </table>
-        <br />
-        <br />
       <div>
-        <h1 style="margin-top:0px;">N°:&nbsp;&nbsp;{{ order_list.ref_code }}</h1>
+        <h1 style="margin-top:0px;">N°:&nbsp;&nbsp;{{ order.ref_code }}</h1>
+        <br />
+        <br />
       </div>
+      <h1 style="text-align: left;">
+        <strong>Somme Totale </strong>: {{ order.get_amount|floatformat:2}} DA
+      </h1>
+      <h1 style="text-align: right;">
+        <strong>Quantité Totale </strong>: {{ order.get_total}}
+      </h1>
         <table class="table order-content">
           <thead>
             <tr>
@@ -140,117 +135,45 @@
             </tr>
           </thead>
           <tbody>
-          {% if order_list.category == "Cordon" %}
-
-            {% for order_item in order_list.handles.all %}
-            <tr class="order-item">
-              <td>{{ forloop.counter }}</td>
-              <td>{{ order_item.item }}</td>
-              <td>{{ order_item.quantity}}</td>
-            </tr>
-            {% endfor %}
-          {% elif order_list.category == "Labelling" %}
-
-            {% for order_item in order_list.labellings.all %}
-            <tr class="order-item">
-              <td>{{ forloop.counter }}</td>
-              <td>{{ order_item.item }}</td>
-              <td>{{ order_item.quantity}}</td>
-            </tr>
-            {% endfor %}
-          {% elif order_list.category == "Emballage" %}
-
-            {% for order_item in order_list.packages.all %}
-            <tr class="order-item">
-              <td>{{ forloop.counter }}</td>
-              <td>{{ order_item.item }}</td>
-              <td>{{ order_item.quantity}}</td>
-            </tr>
-            {% endfor %}
-          {% elif order_list.category == "Scotch" %}
-
-            {% for order_item in order_list.tapes.all %}
-            <tr class="order-item">
-              <td>{{ forloop.counter }}</td>
-              <td>{{ order_item.item }}</td>
-              <td>{{ order_item.quantity}}</td>
-            </tr>
-            {% endfor %}
-          {% elif order_list.category == "Pièce de Rechange" %}
-
-            {% for order_item in order_list.parts.all %}
-            <tr class="order-item">
-              <td>{{ forloop.counter }}</td>
-              <td>{{ order_item.item }}</td>
-              <td>{{ order_item.quantity}}</td>
-            </tr>
-            {% endfor %}
-
-          {% else %}
-            {% for order_item in order_list.items.all %}
+            {% for order_item in order.items.all %}
             <tr class="order-item">
               <td>{{ forloop.counter }}</td>
               <td>{{ order_item.item.product_designation }}</td>
               <td>{{ order_item.quantity}}</td>
             </tr>
             {% endfor %}
-            {% endif %}
-          <h1 style="text-align: right;">
-          <strong>Total </strong>: {{ order_list.get_total}}
-          </h1>
-          {% if order_list.category == "Produit Fini" %}
-          <h1 style="text-align: left;">
-          <strong>Stock </strong>: {% if order_list.external_stock is True %} Externe {% else %} Interne {% endif %}
-          </h1>
-          {% endif %}
           </tbody>
         </table>
       </div>
       <div>
         <p style="text-align: right;">
-          <strong>Date </strong>: {{ order_list.ordered_date }}
+          <strong>Date </strong>: {{ order.ordered_date }}
         </p>
       </div>
       <table class="signature">
         <thead>
           <tr>
             <th style="text-decoration:underline;">
-            {% if order_list.company is not None %}
-              Entreprise
-            {% elif order_list.intern_user is not None %}
-              Opérateur
-            {% elif order_list.client is not None %}
-              Client
-            {% elif order_list.supplier is not None %}
+            {% if order.type_order == "STOCK_ENTRY" %}
               Fournisseur
             {% endif %}
             </th>
 
             <th style="text-align: right; text-decoration:underline;">
-            {% if order_list.user.profile.job_position.name == "Gestionnaire de Stock" %}
-              Magasinier
-            {% elif order_list.user.profile.job_position.name == "Mélangeur" %}
-              Mélangeur
-            {% endif %}
+              Opérateur
             </th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>
-              {% if order_list.company is not None %}
-              {{ order_list.company}}
-            {% elif order_list.intern_user is not None %}
-              {{ order_list.intern_user.first_name|upper}} {{ order_list.intern_user.last_name|upper}}
-            {% elif order_list.client is not None %}
-              {{ order_list.client}}
-            {% elif order_list.supplier is not None %}
-              {{ order_list.supplier}}
+            {% if order.type_order == "STOCK_ENTRY" %}
+              {{ order.supplier}}
             {% endif %}
             </td>
 
             <td style="text-align: right; font-size: 10px;">
-              {{ order_list.user.first_name|upper }} {{order_list.user.last_name|upper}}
+              {{ order.user.first_name|upper }} {{order.user.last_name|upper}}
             </td>
           </tr>
         </tbody>

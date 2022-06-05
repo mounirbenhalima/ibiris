@@ -1,10 +1,10 @@
 from django import forms
-from . models import Contact, CONTACT_TYPE
+from . models import Contact
 
 
 class ContactForm(forms.ModelForm):
     first_name = forms.CharField(label="Prénom",
-                                 required=True,
+                                 required=False,
                                  widget=forms.TextInput(
                                      attrs={
                                          "class": "form-control",
@@ -12,6 +12,14 @@ class ContactForm(forms.ModelForm):
                                      }
                                  ))
     last_name = forms.CharField(label="Nom",
+                                 required=False,
+                                 widget=forms.TextInput(
+                                     attrs={
+                                         "class": "form-control",
+                                         "type": "text",
+                                     }
+                                 ))
+    company = forms.CharField(label="Entreprise",
                                  required=True,
                                  widget=forms.TextInput(
                                      attrs={
@@ -19,13 +27,6 @@ class ContactForm(forms.ModelForm):
                                          "type": "text",
                                      }
                                  ))
-    contact_type = forms.CharField(label="Type du Contact",
-                                widget=forms.Select(
-                                    choices=CONTACT_TYPE,
-                                    attrs={
-                                        "class": "form-control",
-                                    }
-                                ))
     email = forms.EmailField(label="Email",
         required=False,
         widget=forms.TextInput(
@@ -59,4 +60,4 @@ class ContactForm(forms.ModelForm):
 
     class Meta:
         model = Contact
-        fields = ['first_name', 'last_name', 'contact_type', 'email', "phone_number", "address"]
+        fields = ['first_name', 'last_name','company', 'email', "phone_number", "address"]
