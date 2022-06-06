@@ -134,6 +134,8 @@ class ConsumptionCreateView(View):
         else:
             messages.error(request, "Erreur !")
             return redirect(request.META.get('HTTP_REFERER'))
+        messages.success(request, "Opération Réussie %s : %s" %(batch.product, quantity))
+        return redirect(request.META.get('HTTP_REFERER'))
         return redirect(self.success_url)
 
 
