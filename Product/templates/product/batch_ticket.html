@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+{% load static %}
+<style type="text/css">
+@page {
+        size: A6;
+        margin: 0.5cm;
+      }
+</style>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>{{part.ref}}</title>
+    <link href="{% static 'MDB/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <style type="text/css">
+    </style>
+  </head>
+  <body>
+    <div class="container">
+    <div class="logo_placement">
+    <img width="1" height='1' alt="logo" src="{{company.logo.path}}" />
+    </div>
+      <img id="barcode" src="https://api.qrserver.com/v1/create-qr-code/?data={{batch.slug}}" alt="" title="{{batch.slug}}" width="360" height="360"/>
+      <div class="card">
+      	<div>
+      	 <p style="text-align: center; font-size: 20px; margin-top: 25px;">{{ batch.slug }}</p>
+      	</div>
+      </div>
+    </div>
+    
+  </body>
+</html>

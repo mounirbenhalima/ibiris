@@ -13,10 +13,10 @@
         <div class="row mt-1">
 
             <!--Grid column-->
-            <div class="col-md-4 mb-4">
+            <div class="col-md-6 mb-4">
 
                 <!-- Card -->
-                <a href="{% url 'stock-manager:product-entry' %}" class="card hoverable">
+                <a href="{% url 'stock-manager:purchase' %}" class="card hoverable">
 
                     <!-- Card content -->
                     <div class="card-body my-4">
@@ -32,16 +32,16 @@
             </div>
             <!--Grid column-->
             <!--Grid column-->
-            <div class="col-md-4 mb-4">
+            <div class="col-md-6 mb-4">
 
                 <!-- Card -->
-                <a href="{% url 'stock-manager:product-out' %}" class="card hoverable">
+                <a href="{% url 'stock-manager:consumption' %}" class="card hoverable">
 
                     <!-- Card content -->
                     <div class="card-body my-4">
 
-                        <p><i class="fas fa-external-link-alt fa-3x text-muted"></i></p>
-                        <h5 class="black-text mb-0"> Sortie</h5>
+                        <p><i class="fas fa-sign-out-alt fa-3x text-muted"></i></p>
+                        <h5 class="black-text mb-0"> Consommation</h5>
 
                     </div>
 
@@ -52,7 +52,66 @@
             <!--Grid column-->
             
             <!--Grid column-->
-            <div class="col-md-4 mb-4">
+            <div class="col-md-6 mb-4">
+
+                <!-- Card -->
+                <a href="{% url 'stock-manager:purchase-list' %}" class="card hoverable">
+
+                    <!-- Card content -->
+                    <div class="card-body my-4">
+
+                        <p><i class="fas fa-file-alt fa-3x text-muted"></i></p>
+                        <h5 class="black-text mb-0"> Liste des Achats</h5>
+
+                    </div>
+
+                </a>
+                <!-- Card -->
+
+            </div>
+            <!--Grid column-->
+
+            <!--Grid column-->
+            <div class="col-md-6 mb-4">
+
+                <!-- Card -->
+                <a href="{% url 'stock-manager:consumption-list' %}" class="card hoverable">
+
+                    <!-- Card content -->
+                    <div class="card-body my-4">
+
+                        <p><i class="fas fa-file-alt fa-3x text-muted"></i></p>
+                        <h5 class="black-text mb-0"> Liste des Consommations</h5>
+
+                    </div>
+
+                </a>
+                <!-- Card -->
+
+            </div>
+            <!--Grid column-->
+            
+            <!--Grid column-->
+            <div class="col-md-6 mb-4">
+
+                <!-- Card -->
+                <a href="{% url 'product:batches' %}" class="card hoverable">
+
+                    <!-- Card content -->
+                    <div class="card-body my-4">
+
+                        <p><i class="fas fa-list fa-3x text-muted"></i></p>
+                        <h5 class="black-text mb-0"> Liste des Lots</h5>
+
+                    </div>
+
+                </a>
+                <!-- Card -->
+
+            </div>
+            <!--Grid column-->
+            <!--Grid column-->
+            <div class="col-md-6 mb-4">
 
                 <!-- Card -->
                 <a href="{% url 'stock-manager:stock-status' %}" target="_blank" class="card hoverable">
@@ -61,7 +120,7 @@
                     <div class="card-body my-4">
 
                         <p><i class="fas fa-print fa-3x text-muted"></i></p>
-                        <h5 class="black-text mb-0"> Etats</h5>
+                        <h5 class="black-text mb-0"> Etat de Stock</h5>
 
                     </div>
 

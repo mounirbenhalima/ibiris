@@ -4,6 +4,13 @@ from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from io import BytesIO
+from django.http import HttpResponse
+from django.template.loader import get_template
+from django.template import loader, Context
+
+from xhtml2pdf import pisa
 from django.views.generic import (
     TemplateView,
     View,
@@ -13,16 +20,25 @@ from django.views.generic import (
     DeleteView,
     ListView
 )
-from Product.models import Brand, Product, Color, Flavor, Range
+from Product.models import Brand, Product, Batch, Flavor, Range
+from Company.models import Company
 
 from Product.forms import (
-    ColorForm,
     FlavorForm,
     ProductForm,
     BrandForm,
     RangeForm,
 )
 
+def render_to_pdf(template_src, context_dict={}):
+    template = get_template(template_src)
+
+    html = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("utf-8")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
 
 class ProductIndexView(TemplateView):
     template_name = 'product/index.html'
@@ -167,68 +183,6 @@ class RangeDeleteView(DeleteView):
 
 # ##----------------------- End Range Form -----------------------##
 
-
-
-##--------------------------- Color Form --------------------------##
-
-class ColorCreateView(CreateView):
-    model = Color
-    template_name = 'product/add_update/color_add.html'
-    form_class = ColorForm
-    success_url = reverse_lazy('product:colors')
-
-    @method_decorator(login_required(login_url=reverse_lazy('login')))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["form_name"] = 'Ajouter une Nouvelle Couleur'
-        return context
-
-
-class ColorUpdateView(UpdateView):
-    template_name = 'product/add_update/color_add.html'
-    form_class = ColorForm
-    success_url = reverse_lazy('product:colors')
-
-    @method_decorator(login_required(login_url=reverse_lazy('login')))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["form_name"] = 'Mettre à jour une Couleur'
-        return context
-
-    def get_object(self):
-        _slug = self.kwargs.get('slug')
-        return get_object_or_404(Color, slug=_slug)
-
-
-class ColorListView(ListView):
-    queryset = Color.objects.all()
-    template_name = 'product/list/color_list.html'
-
-    @method_decorator(login_required(login_url=reverse_lazy('login')))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
-
-class ColorDeleteView(DeleteView):
-    template_name = 'product/delete/color_delete.html'
-    form_class = ColorForm
-    success_url = reverse_lazy('product:colors')
-
-    @method_decorator(login_required(login_url=reverse_lazy('login')))
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
-    def get_object(self):
-        _slug = self.kwargs.get('slug')
-        return get_object_or_404(Color, slug=_slug)
-##------------------------- End color Form ------------------------##
-
 ##--------------------------- Flavor Form --------------------------##
 
 
@@ -244,7 +198,7 @@ class FlavorCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["form_name"] = 'Ajouter un Nouveau Parfum'
+        context["form_name"] = 'Ajouter un Nouvel Arôme'
         return context
 
 
@@ -259,7 +213,7 @@ class FlavorUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["form_name"] = 'Mettre à jour un Parfum'
+        context["form_name"] = 'Mettre à jour un Arôme'
         return context
 
     def get_object(self):
@@ -336,3 +290,33 @@ class ProductListView(ListView):
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 ##------------------------- End Product Form ------------------------##
+
+def batch_list(request):
+    batches = Batch.objects.exclude(quantity = 0).all()
+    products = Product.objects.exclude(quantity = 0).all()
+    return render(request, 'product/list/batch_list.html', context={'batches': batches, 'products': products})
+
+def print_batch_code(request, slug):
+    batch = get_object_or_404(Batch, slug=slug)
+    template = loader.get_template('product/batch_ticket.html')
+    try:
+        company = Company.objects.get(name='')
+    except:
+        company = ''
+    context = {
+        "company": company,
+        "batch": batch,
+
+    }
+    html = template.render(context)
+    pdf = render_to_pdf('product/batch_ticket.html', context)
+    if pdf:
+        response = HttpResponse(pdf, content_type='application/pdf')
+        filename = "%s.pdf" % (batch.ref)
+        content = "inline; filename='%s'" % (filename)
+        download = request.GET.get("download")
+        if download:
+            content = "attachment; filename='%s'" % (filename)
+        response['Content-Disposition'] = content
+        return response
+    return HttpResponse("Not found")

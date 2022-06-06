@@ -1,0 +1,33 @@
+{% extends "base/base.html" %} {% block content %}
+<div class="container-fluid shadow-lg p-3 mb-5 bg-white rounded">
+  <div class="text-center">
+    <h1 class="font-weight-bold black-text mb-5 pb-2">Consommation</h1>
+  </div>
+  <div class="table-responsive text-nowrap">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">N°</th>
+          <th scope="col">Utilisateur</th>
+          <th scope="col">Produit</th>
+          <th scope="col">Lot</th>
+          <th scope="col">Date d'Expiration</th>
+          <th scope="col">Quantité</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for consumption in object_list %}
+        <tr>
+          <td>{{consumption.ref_code}}</td>
+          <td>{{consumption.user}}</td>
+          <td>{{consumption.batch.product}}</td>
+          <td>{{consumption.batch.ref}}</td>
+          <td>{{consumption.batch.expiring_date}}</td>
+          <td>{{consumption.quantity}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock content%}

@@ -18,11 +18,6 @@ urlpatterns = [
      path('product/range/<slug>/update/', RangeUpdateView.as_view(), name='range-update'),
      path('product/range/<slug>/delete/',RangeDeleteView.as_view(), name='range-delete'),
 
-     # Colors Url Management
-     path('color/list/', ColorListView.as_view(), name='colors'),
-     path('color/create/', ColorCreateView.as_view(), name='color-create'),
-     path('color/<slug>/update/', ColorUpdateView.as_view(), name='color-update'),
-     path('color/<slug>/delete/', ColorDeleteView.as_view(), name='color-delete'),
 
      # Flavors Url Management
      path('flavor/list/', FlavorListView.as_view(), name='flavors'),
@@ -31,15 +26,18 @@ urlpatterns = [
      path('flavor/<slug>/delete/', FlavorDeleteView.as_view(), name='flavor-delete'),
 
      # # Product List Url
-     path('product/list/raw-matter/',ProductListView.as_view(), name='products'),
+     path('product/list/product/',ProductListView.as_view(), name='products'),
+     path('product/list/batch/',batch_list, name='batches'),
 
      # # Product Creation Url
-     path('product/create/raw-matter/',ProductCreateView.as_view(), name='product-create'),
+     path('product/create/product/',ProductCreateView.as_view(), name='product-create'),
 
      # # Product Update Url
-     path('product/raw-matter/<slug>/update/',ProductUpdateView.as_view(), name='product-update'),
+     path('product/product/<slug>/update/',ProductUpdateView.as_view(), name='product-update'),
 
      # # Product Delete Url
      path('product/<slug>/delete/',ProductDeleteView.as_view(), name='product-delete'),
+
+     path('print-batch-code/<slug>/', print_batch_code, name='print-batch-code'),
 
 ]

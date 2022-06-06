@@ -1,0 +1,39 @@
+{% extends "base/base.html" %} {% block content %}
+<div class="container-fluid shadow-lg p-3 mb-5 bg-white rounded">
+  <div class="text-center">
+    <h1 class="font-weight-bold black-text mb-5 pb-2">Achats</h1>
+  </div>
+  <div class="table-responsive text-nowrap">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">N°</th>
+          <th scope="col">Utilisateur</th>
+          <th scope="col">Produit</th>
+          <th scope="col">Lot</th>
+          <th scope="col">Date d'Expiration</th>
+          <th scope="col">Quantité</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for purchase in object_list %}
+        <tr>
+          <td>{{purchase.ref_code}}</td>
+          <td>{{purchase.user}}</td>
+          <td>{{purchase.batch.product}}</td>
+          <td>{{purchase.batch.ref}}</td>
+          <td>{{purchase.batch.expiring_date}}</td>
+          <td>{{purchase.quantity}}</td>
+          <td class="justify-content-between">
+            <div class="btn-group d-flex" role="group">
+              <a target="_blank" href="{% url 'product:print-batch-code' purchase.batch.slug %}" class="btn btn-dark btn-sm"><i class="fa fa-qrcode"></i></a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock content%}

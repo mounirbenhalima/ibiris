@@ -1,12 +1,10 @@
 from django import forms
 from .models import (
     Brand,
-    Color,
     Flavor,
     Product,
     Range
 )
-from Contact.models import Contact
 
 
 class BrandForm(forms.ModelForm):
@@ -52,26 +50,6 @@ class RangeForm(forms.ModelForm):
         fields = "__all__"
 
 
-class ColorForm(forms.ModelForm):
-    name = forms.CharField(label="Nom de La Couleur",
-                           required=True,
-                           widget=forms.TextInput(
-                               attrs={
-                                   "class": "form-control",
-                                   "type": "text",
-                               }
-                           ))
-
-    def clean(self):
-        cleaned_data = super().clean()
-        self.cleaned_data['name'] = cleaned_data['name'].lower()
-        return self.cleaned_data
-
-    class Meta:
-        model = Color
-        exclude = ('slug',)
-        fields = "__all__"
-
 class FlavorForm(forms.ModelForm):
     name = forms.CharField(label="Parfum",
                            required=True,
@@ -95,7 +73,7 @@ class FlavorForm(forms.ModelForm):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'weight','ref', 'brand', 'color', 'flavor', 'price', 'cost']
+        fields = ['name', 'weight','ref', 'brand', 'flavor']
     name = forms.ModelChoiceField(
         label="Gamme",
         queryset=Range.objects.all(),
@@ -121,25 +99,8 @@ class ProductForm(forms.ModelForm):
                                           "type": "number",
                                       }
                                   ))
-    price = forms.FloatField(label="Prix de Vente",
-                                  required=False,
-                                  widget=forms.TextInput(
-                                      attrs={
-                                          "class": "form-control",
-                                          "type": "number",
-                                          "step":"0.01",
-                                      }
-                                  ))
-    cost = forms.FloatField(label="Prix d'Achat",
-                                  required=False,
-                                  widget=forms.TextInput(
-                                      attrs={
-                                          "class": "form-control",
-                                          "type": "number",
-                                          "step":"0.01",
-                                      }
-                                  ))
     ref = forms.CharField(label="Référence",
+                                required=False,
                                 widget=forms.TextInput(
                                     attrs={
                                         "class": "form-control",
@@ -147,15 +108,8 @@ class ProductForm(forms.ModelForm):
                                 ))
     brand = forms.ModelChoiceField(
         label="Marque",
+        required=False,
         queryset=Brand.objects.all(),
-        widget=forms.Select(
-            attrs={
-                "class": "form-control",
-            }
-        ))
-    color = forms.ModelChoiceField(
-        label="Couleur",
-        queryset=Color.objects.all(),
         widget=forms.Select(
             attrs={
                 "class": "form-control",
